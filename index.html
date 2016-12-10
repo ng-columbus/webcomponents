@@ -4,15 +4,23 @@
     <meta charset="utf-8">
     <title>BlueSteel</title>
     <script>
-        customElements.define ( 'blue-icon', class extends HTMLElement {
-            connectedCallback () {
-                this.innerHTML = "<b>I'm a blue icon!</b>"
-            }
+        // This is Custom Elements v0 specification
+        // Works in Chrome and Opera, Firefox with a config option dom.webcomponents.enabled;true
+        var BlueIconProto = Object.create ( HTMLElement.prototype )
+        BlueIconProto.createdCallback = function () {
+            this.innerHTML = "<b>I'm a blue icon!</b>"
+        }
+
+        var BlueIcon = document.registerElement ( 'blue-icon', {
+            prototype: BlueIconProto
         } )
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            document.body.appendChild ( new BlueIcon () )
+        });
     </script>
 </head>
 <body>
 <h1>Blue Icon</h1>
-<blue-icon name=""></blue-icon>
 </body>
 </html>

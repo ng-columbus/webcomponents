@@ -1,4 +1,4 @@
 # Central Ohio Angular Meetup
 ## Web Components
 
-npm install -g generator-element
+Simplest possible example of a Web Component
