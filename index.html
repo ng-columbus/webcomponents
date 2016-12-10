@@ -3,15 +3,18 @@
 <head>
     <meta charset="utf-8">
     <title>BlueSteel</title>
+    <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+
     <script>
-        // This is Custom Elements v1 specification
-        // Works in Chrome and Opera
+        // This is Custom Elements v0 specification with ES6 code
+        // Works in Chrome, Opera, Firefox, Safari, IE Edge/11 with polyfill
         class BlueIcon extends HTMLElement {
-            connectedCallback () {
+            createdCallback () {
                 this.innerHTML = "<b>I'm a blue icon!</b>"
             }
         }
-        customElements.define ( 'blue-icon', BlueIcon )
+
+        document.registerElement ( 'blue-icon', BlueIcon )
     </script>
 </head>
 <body>
