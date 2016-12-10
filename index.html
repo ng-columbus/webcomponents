@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>BlueSteel</title>
+    <script>
+        customElements.define ( 'blue-icon', class extends HTMLElement {
+            connectedCallback () {
+                this.innerHTML = "<b>I'm a blue icon!</b>"
+            }
+        } )
+    </script>
+</head>
+<body>
+<h1>Blue Icon</h1>
+<blue-icon name=""></blue-icon>
+</body>
+</html>
