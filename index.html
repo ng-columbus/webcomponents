@@ -30,11 +30,16 @@
             }
 
             connectedCallback () {
+                console.log ( 'connected', this._color )
                 this.render ()
             }
 
+            disconnectedCallback () {
+                console.log ( 'disconnected', this._color )
+            }
+
             render () {
-                this.innerHTML = `<b>I'm a ${this._color} span!</b>`
+                this.innerHTML = `<b style="color: ${this._color}">I'm a ${this._color} span!</b>`
             }
         }
 
@@ -47,9 +52,10 @@
 
             setTimeout ( () => {
                 span.setAttribute ( 'color', 'yellow' )
-                document.querySelectorAll ( 'ng-span:nth-child(2)' ).forEach ( span => {
-                    span.setAttribute ( 'color', 'fuschia' )
-                } )
+                document.querySelectorAll ( 'ng-span' )[ 0 ]
+                        .setAttribute ( 'color', 'fuchsia' )
+                document.querySelectorAll ( 'ng-span' )[ 1 ]
+                        .remove ()
             }, 3000 )
         } )
     </script>
