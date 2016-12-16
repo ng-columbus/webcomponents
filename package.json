@@ -1,20 +1,16 @@
 {
   "name": "webcomponents",
   "version": "0.0.0",
-  "description": "npm install -g generator-element",
-  "main": "index.js",
+  "description": "Centra Ohio Angular Meetup",
+  "main": "index.html",
   "dependencies": {
-    "bower": "^1.8.0",
-    "live-server": "^1.1.0",
-    "vulcanize": "^1.15.1"
+    "@webcomponents/custom-elements": "^1.0.0-alpha.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "live-server": "^1.1.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "bower": "./node_modules/bower/bin/bower",
-    "live": "./node_modules/live-server/live-server.js",
-    "pro": "./node_modules/vulcanize/bin/vulcanize lib/lib.html > dist/bundle.html",
-    "publish": "npm publish --registry=http://localhost:8081/repository/npm-internal/"
+    "serve": "./node_modules/live-server/live-server.js"
   },
   "author": "",
   "license": "ISC"

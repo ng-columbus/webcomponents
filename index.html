@@ -2,24 +2,63 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>BlueSteel</title>
+    <title>Web Components Demo</title>
 
-    <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+    <script src="./node_modules/@webcomponents/custom-elements/custom-elements.min.js"></script>
 
     <script>
-        // This is Custom Elements v0 specification with ES6 code
-        // Works in Chrome, Opera, Firefox, Safari, IE Edge with polyfill
-        class BlueIcon extends HTMLElement {
-            createdCallback () {
-                this.innerHTML = "<b>I'm a blue icon!</b>"
+        // This is Custom Elements v1 specification with ES6 code
+        // Works in latest Chrome; with polyfill in Safari, Opera, Firefox and Edge
+        // Does not work in Edge because support for ES6 not present; babel has bug
+        // when transpiling 'extends native' https://github.com/babel/babel/issues/4480
+        class NgSpan extends HTMLElement {
+
+            constructor () {
+                super ()
+                this._color = 'blue'
+            }
+
+            static get observedAttributes () {
+                return [ 'color' ];
+            }
+
+            attributeChangedCallback ( name, oldValue, newValue ) {
+                if ( name === 'color' ) {
+                    this._color = newValue
+                    this.render ()
+                }
+            }
+
+            connectedCallback () {
+                this.render ()
+            }
+
+            render () {
+                console.log ( 'rendering', this._color )
+                this.innerHTML = `<b>I'm a ${this._color} span!</b>`
             }
         }
 
-        document.registerElement ( 'blue-icon', BlueIcon )
+        customElements.define ( 'ng-span', NgSpan )
+
+        window.addEventListener ( 'DOMContentLoaded', function ( e ) {
+            let span = new NgSpan ()
+            span.setAttribute ( 'color', 'red' )
+            document.body.appendChild ( span )
+
+            setTimeout ( () => {
+                span.setAttribute ( 'color', 'yellow' )
+                document.querySelectorAll ( 'ng-span:nth-child(2)' ).forEach ( span => {
+                    span.setAttribute ( 'color', 'fuschia' )
+                } )
+            }, 3000 )
+        } )
     </script>
 </head>
 <body>
-<h1>Blue Icon</h1>
-<blue-icon></blue-icon>
+<h1>Blue Span</h1>
+<ng-span></ng-span>
+<ng-span color="green"></ng-span>
+<h3>Programmatic Creation</h3>
 </body>
 </html>
