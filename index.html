@@ -6,6 +6,41 @@
 
     <script src="./node_modules/@webcomponents/custom-elements/custom-elements.min.js"></script>
 
+    <style>
+        h4 {
+            color: #0d47a1;
+        }
+    </style>
+
+    <template id="gender-name-template">
+        <style>
+            gender-name > div {
+                display: flex;
+                align-items: center;
+            }
+
+            gender-name .gender svg {
+                height: 24px;
+                width: 24px;
+                padding-right: 4px;
+            }
+
+            gender-name h4 {
+                font-family: sans-serif;
+                height: 24px;
+                margin: 0;
+            }
+        </style>
+
+        <div>
+            <span class="gender"></span><h4 class="name"></h4>
+        </div>
+
+        <script>
+            console.log( 'Executing template script' )
+        </script>
+    </template>
+
     <script>
         // This is Custom Elements v1 specification with ES6 code
         // Works in latest Chrome; with polyfill in Safari, Opera, Firefox and Edge
@@ -27,7 +62,9 @@
 
             set gender( value ) {
                 if ( value !== this.gender ) {
+                    console.log('setting gender')
                     this.setAttribute( 'gender', value )
+                    this.updateGender()
                 }
             }
 
@@ -38,19 +75,16 @@
             set name( value ) {
                 if ( value !== this.name ) {
                     this.setAttribute( 'name', value )
+                    this.updateName()
                 }
             }
 
             attributeChangedCallback( name, oldValue, newValue ) {
                 console.log( 'attributeChangedCallback', name, oldValue, newValue )
-                this.render()
             }
 
             connectedCallback() {
                 console.log( 'connected', this.name )
-                this.addEventListener( 'click', e => {
-                    alert( `In Component, target=${e.target.nodeName}` )
-                } )
                 this.render()
             }
 
@@ -58,43 +92,63 @@
                 console.log( 'disconnected', this.name )
             }
 
+            updateGender() {
+                const genderEle                         = this.querySelector( '.gender' )
+                switch ( this.gender ) {
+                    case 'male':
+                        genderEle.innerHTML = '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 128q26 0 45 19t19 45v416q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-262l-382 383q126 156 126 359 0 117-45.5 223.5t-123 184-184 123-223.5 45.5-223.5-45.5-184-123-123-184-45.5-223.5 45.5-223.5 123-184 184-123 223.5-45.5q203 0 359 126l382-382h-261q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h416zm-896 1408q185 0 316.5-131.5t131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5z"/></svg>'
+                        break
+                    case 'female':
+                        genderEle.innerHTML = '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1408 576q0 221-147.5 384.5t-364.5 187.5v260h224q14 0 23 9t9 23v64q0 14-9 23t-23 9h-224v224q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-224h-224q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-260q-150-16-271.5-103t-186-224-52.5-292q11-134 80.5-249t182-188 245.5-88q170-19 319 54t236 212 87 306zm-1024 0q0 185 131.5 316.5t316.5 131.5 316.5-131.5 131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5z"/></svg>'
+                        break
+                    default:
+                        genderEle.innerHTML = ''
+                }
+            }
+
+            updateName() {
+                this.querySelector( '.name' ).innerHTML = this.name
+            }
+
             render() {
                 console.log( 'render', this.name )
-                this.innerHTML = `<div><span class="gender"></span><h4>${this.name}</h4></div>`
+                const template = document.querySelector( '#gender-name-template' )
+                const nodes    = document.importNode( template.content, true )
+                this.appendChild( nodes )
+
+                this.addEventListener( 'click', e => {
+                    alert( `In Component, target=${e.target.nodeName}` )
+                } )
+
+                this.updateName()
+                this.updateGender()
             }
         }
 
         customElements.define( 'gender-name', GenderName )
 
         window.addEventListener( 'DOMContentLoaded', function ( e ) {
-            let nameEle    = new GenderName()
-            nameEle.name   = 'Barney Rubble'
-            nameEle.gender = 'male'
-            document.body.appendChild( nameEle )
-
             setTimeout( () => {
-                const nameEle = document.querySelectorAll( 'gender-name' )[ 0 ]
-                nameEle.setAttribute( 'name', 'Wilma Flintstone' )
-                nameEle.setAttribute( 'gender', 'female' )
+                const ele  = document.querySelector( 'gender-name' )
+                ele.name   = 'Wilma Flintstone'
+                ele.gender = 'female'
             }, 3000 )
 
             setTimeout( () => {
-                document.querySelectorAll( 'gender-name' )[ 1 ]
-                        .remove()
+                const ele  = document.querySelector( 'gender-name' )
+                ele.name   = 'Betty Rubble'
+                ele.gender = 'female'
             }, 6000 )
-
-            document.querySelectorAll( 'gender-name' )[ 2 ]
-                    .addEventListener( 'click', e => {
-                        e.preventDefault()
-                        alert( `${e.currentTarget.nodeName} clicked; name="${e.currentTarget.name}"` )
-                    } )
         } )
     </script>
 </head>
 <body>
-<h1>Embedded Elements</h1>
+
+<h1>HTML Templates Example</h1>
+<h4>Using a template to create DOM used within custom elements</h4>
+
 <gender-name gender="male" name="Fred Flintstone"></gender-name>
-<gender-name gender="female" name="Betty Rubble"></gender-name>
-<h3>Programmatic Creation</h3>
+<gender-name></gender-name>
+
 </body>
 </html>
