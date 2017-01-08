@@ -9,61 +9,92 @@
     <script>
         // This is Custom Elements v1 specification with ES6 code
         // Works in latest Chrome; with polyfill in Safari, Opera, Firefox and Edge
-        // Does not work in Edge because support for ES6 not present; babel has bug
-        // when transpiling 'extends native' https://github.com/babel/babel/issues/4480
-        class NgSpan extends HTMLElement {
+        // Has to be transpiled for IE11 due to lack of ES6 support
 
-            constructor () {
-                super ()
-                this._color = 'blue'
+        class GenderName extends HTMLElement {
+
+            constructor() {
+                super()
             }
 
-            static get observedAttributes () {
-                return [ 'color' ];
+            static get observedAttributes() {
+                return [ 'gender', 'name' ]
             }
 
-            attributeChangedCallback ( name, oldValue, newValue ) {
-                if ( name === 'color' ) {
-                    this._color = newValue
-                    this.render ()
+            get gender() {
+                return this.getAttribute( 'gender' )
+            }
+
+            set gender( value ) {
+                if ( value !== this.gender ) {
+                    this.setAttribute( 'gender', value )
                 }
             }
 
-            connectedCallback () {
-                console.log ( 'connected', this._color )
-                this.render ()
+            get name() {
+                return this.getAttribute( 'name' ) || 'Unknown'
             }
 
-            disconnectedCallback () {
-                console.log ( 'disconnected', this._color )
+            set name( value ) {
+                if ( value !== this.name ) {
+                    this.setAttribute( 'name', value )
+                }
             }
 
-            render () {
-                this.innerHTML = `<span style="color: ${this._color}">I'm a ${this._color} span!</span>`
+            attributeChangedCallback( name, oldValue, newValue ) {
+                console.log( 'attributeChangedCallback', name, oldValue, newValue )
+                this.render()
+            }
+
+            connectedCallback() {
+                console.log( 'connected', this.name )
+                this.addEventListener( 'click', e => {
+                    alert( `In Component, target=${e.target.nodeName}` )
+                } )
+                this.render()
+            }
+
+            disconnectedCallback() {
+                console.log( 'disconnected', this.name )
+            }
+
+            render() {
+                console.log( 'render', this.name )
+                this.innerHTML = `<div><span id="gender"></span><h4>${this.name}</h4></div>`
             }
         }
 
-        customElements.define ( 'ng-span', NgSpan )
+        customElements.define( 'gender-name', GenderName )
 
-        window.addEventListener ( 'DOMContentLoaded', function ( e ) {
-            let span = new NgSpan ()
-            span.setAttribute ( 'color', 'red' )
-            document.body.appendChild ( span )
+        window.addEventListener( 'DOMContentLoaded', function ( e ) {
+            let nameEle    = new GenderName()
+            nameEle.name   = 'Barney Rubble'
+            nameEle.gender = 'male'
+            document.body.appendChild( nameEle )
 
-            setTimeout ( () => {
-                span.setAttribute ( 'color', 'yellow' )
-                document.querySelectorAll ( 'ng-span' )[ 0 ]
-                        .setAttribute ( 'color', 'fuchsia' )
-                document.querySelectorAll ( 'ng-span' )[ 1 ]
-                        .remove ()
+            setTimeout( () => {
+                const nameEle = document.querySelectorAll( 'gender-name' )[ 0 ]
+                nameEle.setAttribute( 'name', 'Wilma Flintstone' )
+                nameEle.setAttribute( 'gender', 'female' )
             }, 3000 )
+
+            setTimeout( () => {
+                document.querySelectorAll( 'gender-name' )[ 1 ]
+                        .remove()
+            }, 6000 )
+
+            document.querySelectorAll( 'gender-name' )[ 2 ]
+                    .addEventListener( 'click', e => {
+                        e.preventDefault()
+                        alert( `${e.currentTarget.nodeName} clicked; name="${e.currentTarget.name}"` )
+                    } )
         } )
     </script>
 </head>
 <body>
-<h1>Blue Span</h1>
-<ng-span></ng-span>
-<ng-span color="green"></ng-span>
+<h1>Embedded Elements</h1>
+<gender-name gender="male" name="Fred Flintstone"></gender-name>
+<gender-name gender="female" name="Betty Rubble"></gender-name>
 <h3>Programmatic Creation</h3>
 </body>
 </html>
