@@ -8,26 +8,28 @@
 
     <style>
         h4 {
-            color: #0d47a1;
+            color: red;
         }
     </style>
 
     <template id="gender-name-template">
         <style>
             gender-name > div {
-                display: flex;
                 align-items: center;
+                display: flex;
             }
 
             gender-name .gender svg {
+                fill: #333;
                 height: 24px;
-                width: 24px;
                 padding-right: 4px;
+                width: 24px;
             }
 
             gender-name h4 {
                 font-family: sans-serif;
                 height: 24px;
+                line-height: 24px;
                 margin: 0;
             }
         </style>
@@ -62,7 +64,7 @@
 
             set gender( value ) {
                 if ( value !== this.gender ) {
-                    console.log('setting gender')
+                    console.log( 'setting gender' )
                     this.setAttribute( 'gender', value )
                     this.updateGender()
                 }
@@ -93,7 +95,7 @@
             }
 
             updateGender() {
-                const genderEle                         = this.querySelector( '.gender' )
+                const genderEle = this.querySelector( '.gender' )
                 switch ( this.gender ) {
                     case 'male':
                         genderEle.innerHTML = '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 128q26 0 45 19t19 45v416q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-262l-382 383q126 156 126 359 0 117-45.5 223.5t-123 184-184 123-223.5 45.5-223.5-45.5-184-123-123-184-45.5-223.5 45.5-223.5 123-184 184-123 223.5-45.5q203 0 359 126l382-382h-261q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h416zm-896 1408q185 0 316.5-131.5t131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5z"/></svg>'
@@ -148,7 +150,6 @@
 <h4>Using a template to create DOM used within custom elements</h4>
 
 <gender-name gender="male" name="Fred Flintstone"></gender-name>
-<gender-name></gender-name>
 
 </body>
 </html>
