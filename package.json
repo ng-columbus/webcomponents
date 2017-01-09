@@ -5,6 +5,7 @@
   "main": "index.html",
   "dependencies": {
     "@webcomponents/custom-elements": "^1.0.0-alpha.3",
+    "@webcomponents/html-imports": "github:webcomponents/html-imports",
     "@webcomponents/shadycss": "github:webcomponents/shadycss",
     "@webcomponents/shadydom": "github:webcomponents/shadydom"
   },

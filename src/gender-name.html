@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <template id="gender-name-template">
+        <style>
+            :host > div {
+                align-items: center;
+                display: flex;
+            }
+
+            :host .gender svg {
+                fill: #333;
+                height: 24px;
+                padding-right: 4px;
+                width: 24px;
+            }
+
+            :host h4 {
+                font-family: sans-serif;
+                height: 24px;
+                line-height: 24px;
+                margin: 0;
+            }
+        </style>
+
+        <div>
+            <span class="gender"></span><h4 class="name"></h4>
+        </div>
+    </template>
+
+    <template id="male">
+        <svg width="64" height="64" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1600 128q26 0 45 19t19 45v416q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-262l-382 383q126 156 126 359 0 117-45.5 223.5t-123 184-184 123-223.5 45.5-223.5-45.5-184-123-123-184-45.5-223.5 45.5-223.5 123-184 184-123 223.5-45.5q203 0 359 126l382-382h-261q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h416zm-896 1408q185 0 316.5-131.5t131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5z"/>
+        </svg>
+    </template>
+
+    <template id="female">
+        <svg width="64" height="64" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1408 576q0 221-147.5 384.5t-364.5 187.5v260h224q14 0 23 9t9 23v64q0 14-9 23t-23 9h-224v224q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-224h-224q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-260q-150-16-271.5-103t-186-224-52.5-292q11-134 80.5-249t182-188 245.5-88q170-19 319 54t236 212 87 306zm-1024 0q0 185 131.5 316.5t316.5 131.5 316.5-131.5 131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5z"/>
+        </svg>
+    </template>
+
+    <script>
+        const importDoc = document._currentScript
+                ? document._currentScript.ownerDocument
+                : document.currentScript.ownerDocument
+
+        class GenderName extends HTMLElement {
+
+            constructor() {
+                super()
+                this._name   = 'unknown'
+                this._gender = null
+                this.init()
+            }
+
+            init() {
+                console.log( 'init shadow dom' )
+
+                // create the shadow root
+                this.attachShadow( { mode: 'open' } )
+
+                //  locate template nodes
+                const template = importDoc.querySelector( '#gender-name-template' )
+
+                // apply CSS polyfill to template
+                if ( window.ShadyCSS ) {
+                    ShadyCSS.prepareTemplate( template, 'gender-name' )
+                }
+
+                // import the nodes and append to the shadow root
+                const nodes = document.importNode( template.content, true )
+                this.shadowRoot.appendChild( nodes )
+
+                // add a click listener to the entire component
+                this.addEventListener( 'click', e => {
+                    alert( `In Component, target=${e.target.nodeName}` )
+                } )
+
+                // Import the male template and prepare it for css shimming
+                const maleTemplate = importDoc.querySelector( '#male' )
+                if ( window.ShadyCSS ) {
+                    ShadyCSS.prepareTemplate( maleTemplate, 'gender-name' )
+                }
+                this.svgMale = document.importNode( maleTemplate.content, true )
+
+                // Import the female template and prepare it for css shimming
+                const femaleTemplate = importDoc.querySelector( '#female' )
+                if ( window.ShadyCSS )
+                    ShadyCSS.prepareTemplate( femaleTemplate, 'gender-name' );
+                this.svgFemale = document.importNode( femaleTemplate.content, true )
+            }
+
+            static get observedAttributes() {
+                return [ 'gender', 'name' ]
+            }
+
+            attributeChangedCallback( name, oldValue, newValue ) {
+                if ( oldValue !== newValue ) {
+                    console.log( 'attributeChangedCallback', name, oldValue, newValue )
+                    if ( name === 'name' ) this.name = newValue
+                    if ( name === 'gender' ) this.gender = newValue
+                }
+            }
+
+            get gender() {
+                return this._gender
+            }
+
+            set gender( value ) {
+                if ( value !== this._gender ) {
+                    console.log( 'set gender', value, this._gender )
+                    this._gender = value
+                    this.setAttribute( 'gender', value )
+                    this.updateGender()
+                }
+            }
+
+            get name() {
+                return this._name
+            }
+
+            set name( value ) {
+                if ( value !== this._name ) {
+                    console.log( 'set name', value, this._name )
+                    this._name = value
+                    this.setAttribute( 'name', value )
+                    this.updateName()
+                }
+            }
+
+            connectedCallback() {
+                console.log( 'connected', this.name )
+                if ( window.ShadyCSS )
+                    ShadyCSS.applyStyle( this )
+            }
+
+            disconnectedCallback() {
+                console.log( 'disconnected', this.name )
+            }
+
+            updateGender() {
+                const genderEle = this.shadowRoot.querySelector( '.gender' )
+                console.log( 'updating gender', genderEle, this._gender )
+
+                // Remove any children
+                while ( genderEle.firstChild ) {
+                    genderEle.removeChild( genderEle.firstChild );
+                }
+
+                switch ( this._gender ) {
+                    case 'male':
+                        genderEle.appendChild( this.svgMale )
+                        console.log( 'appended male', genderEle, this.svgMale )
+                        break
+                    case 'female':
+                        genderEle.appendChild( this.svgFemale )
+                        break
+                    default:
+                        console.log( 'unknown gender' )
+                }
+            }
+
+            updateName() {
+                this.shadowRoot.querySelector( '.name' ).innerHTML = this.name
+            }
+        }
+
+        customElements.define( 'gender-name', GenderName )
+    </script>
+</head>
+<body>
+
+</body>
+</html>
