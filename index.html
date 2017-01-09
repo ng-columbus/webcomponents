@@ -175,8 +175,12 @@
 
         window.addEventListener( 'DOMContentLoaded', function ( e ) {
             setTimeout( () => {
-                console.log( 'Element',
+                console.log( 'Node via CSS',
                         document.querySelector( 'gender-name h4' ) )
+                console.log( 'Node via JS', document
+                        .querySelector( 'gender-name' )
+                        .shadowRoot.children[1].children[1]
+                )
                 const ele = document.querySelector( 'gender-name' )
                 ele.setAttribute( 'name', 'Wilma Flintstone' )
                 ele.setAttribute( 'gender', 'female' )
