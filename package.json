@@ -4,12 +4,12 @@
   "description": "Central Ohio Angular Meetup",
   "main": "index.html",
   "dependencies": {
-    "@webcomponents/custom-elements": "^1.0.0-alpha.3"
+    "@webcomponents/custom-elements": "^1.0.0-alpha.3",
+    "@webcomponents/shadycss": "github:webcomponents/shadycss",
+    "@webcomponents/shadydom": "github:webcomponents/shadydom"
   },
   "devDependencies": {
-    "handlebars": "^4.0.6",
-    "live-server": "^1.1.0",
-    "mote": "^0.2.0"
+    "live-server": "^1.1.0"
   },
   "scripts": {
     "serve": "./node_modules/live-server/live-server.js"
