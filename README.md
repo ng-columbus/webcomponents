@@ -9,7 +9,7 @@ Demonstration of the Web Component APIs
 
 git tag | description
 ------- | -----------
-custom-element-0 | The simplest possible ES6 custom element implementation
+custom-element-1 | The simplest possible ES6 custom element implementation
 
 ### HTML Templates
 
