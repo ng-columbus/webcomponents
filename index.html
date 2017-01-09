@@ -141,12 +141,7 @@
             }
 
             connectedCallback() {
-                console.log( 'connected', this.name )
                 ShadyCSS.applyStyle( this )
-            }
-
-            disconnectedCallback() {
-                console.log( 'disconnected', this.name )
             }
 
             updateGender() {
@@ -180,10 +175,13 @@
 
         window.addEventListener( 'DOMContentLoaded', function ( e ) {
             setTimeout( () => {
+                console.log( 'Element',
+                        document.querySelector( 'gender-name h4' ) )
                 const ele = document.querySelector( 'gender-name' )
                 ele.setAttribute( 'name', 'Wilma Flintstone' )
                 ele.setAttribute( 'gender', 'female' )
             }, 3000 )
+
         } )
     </script>
 </head>
