@@ -74,7 +74,7 @@
                 console.log( 'init shadow dom' )
 
                 // create the shadow root
-                this.attachShadow( { mode: 'open' } )
+                this._shadowRoot = this.attachShadow( { mode: 'closed' } )
 
                 //  locate template nodes
                 const template = document.querySelector( '#gender-name-template' )
@@ -84,7 +84,7 @@
 
                 // import the nodes and append to the shadow root
                 const nodes = document.importNode( template.content, true )
-                this.shadowRoot.appendChild( nodes )
+                this._shadowRoot.appendChild( nodes )
 
                 // add a click listener to the entire component
                 this.addEventListener( 'click', e => {
@@ -108,7 +108,6 @@
 
             attributeChangedCallback( name, oldValue, newValue ) {
                 if ( oldValue !== newValue ) {
-                    console.log( 'attributeChangedCallback', name, oldValue, newValue )
                     if ( name === 'name' ) this.name = newValue
                     if ( name === 'gender' ) this.gender = newValue
                 }
@@ -120,7 +119,6 @@
 
             set gender( value ) {
                 if ( value !== this._gender ) {
-                    console.log( 'set gender', value, this._gender )
                     this._gender = value
                     this.setAttribute( 'gender', value )
                     this.updateGender()
@@ -145,7 +143,7 @@
             }
 
             updateGender() {
-                const genderEle = this.shadowRoot.querySelector( '.gender' )
+                const genderEle = this._shadowRoot.querySelector( '.gender' )
                 console.log( 'updating gender', genderEle, this._gender )
 
                 // Remove any children
@@ -167,7 +165,7 @@
             }
 
             updateName() {
-                this.shadowRoot.querySelector( '.name' ).innerHTML = this.name
+                this._shadowRoot.querySelector( '.name' ).innerHTML = this.name
             }
         }
 
@@ -177,10 +175,6 @@
             setTimeout( () => {
                 console.log( 'Node via CSS',
                         document.querySelector( 'gender-name h4' ) )
-                console.log( 'Node via JS', document
-                        .querySelector( 'gender-name' )
-                        .shadowRoot.children[1].children[1]
-                )
                 const ele = document.querySelector( 'gender-name' )
                 ele.setAttribute( 'name', 'Wilma Flintstone' )
                 ele.setAttribute( 'gender', 'female' )
