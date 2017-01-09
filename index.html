@@ -63,11 +63,8 @@
             }
 
             set gender( value ) {
-                if ( value !== this.gender ) {
-                    console.log( 'setting gender' )
-                    this.setAttribute( 'gender', value )
-                    this.updateGender()
-                }
+                this.setAttribute( 'gender', value )
+                this.updateGender()
             }
 
             get name() {
@@ -75,14 +72,16 @@
             }
 
             set name( value ) {
-                if ( value !== this.name ) {
-                    this.setAttribute( 'name', value )
-                    this.updateName()
-                }
+                this.setAttribute( 'name', value )
+                this.updateName()
             }
 
             attributeChangedCallback( name, oldValue, newValue ) {
                 console.log( 'attributeChangedCallback', name, oldValue, newValue )
+                if ( oldValue != newValue ) {
+                    if ( name === 'name' ) this.name = newValue
+                    if ( name === 'gender' ) this.gender = newValue
+                }
             }
 
             connectedCallback() {
@@ -96,12 +95,14 @@
 
             updateGender() {
                 const genderEle = this.querySelector( '.gender' )
+                if ( !genderEle ) return
+
                 switch ( this.gender ) {
                     case 'male':
-                        genderEle.innerHTML = '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 128q26 0 45 19t19 45v416q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-262l-382 383q126 156 126 359 0 117-45.5 223.5t-123 184-184 123-223.5 45.5-223.5-45.5-184-123-123-184-45.5-223.5 45.5-223.5 123-184 184-123 223.5-45.5q203 0 359 126l382-382h-261q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h416zm-896 1408q185 0 316.5-131.5t131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5z"/></svg>'
+                        genderEle.innerHTML = '<svg width="64" height="64" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 128q26 0 45 19t19 45v416q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-262l-382 383q126 156 126 359 0 117-45.5 223.5t-123 184-184 123-223.5 45.5-223.5-45.5-184-123-123-184-45.5-223.5 45.5-223.5 123-184 184-123 223.5-45.5q203 0 359 126l382-382h-261q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h416zm-896 1408q185 0 316.5-131.5t131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5z"/></svg>'
                         break
                     case 'female':
-                        genderEle.innerHTML = '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1408 576q0 221-147.5 384.5t-364.5 187.5v260h224q14 0 23 9t9 23v64q0 14-9 23t-23 9h-224v224q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-224h-224q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-260q-150-16-271.5-103t-186-224-52.5-292q11-134 80.5-249t182-188 245.5-88q170-19 319 54t236 212 87 306zm-1024 0q0 185 131.5 316.5t316.5 131.5 316.5-131.5 131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5z"/></svg>'
+                        genderEle.innerHTML = '<svg width="64" height="64" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1408 576q0 221-147.5 384.5t-364.5 187.5v260h224q14 0 23 9t9 23v64q0 14-9 23t-23 9h-224v224q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-224h-224q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h224v-260q-150-16-271.5-103t-186-224-52.5-292q11-134 80.5-249t182-188 245.5-88q170-19 319 54t236 212 87 306zm-1024 0q0 185 131.5 316.5t316.5 131.5 316.5-131.5 131.5-316.5-131.5-316.5-316.5-131.5-316.5 131.5-131.5 316.5z"/></svg>'
                         break
                     default:
                         genderEle.innerHTML = ''
@@ -109,12 +110,14 @@
             }
 
             updateName() {
-                this.querySelector( '.name' ).innerHTML = this.name
+                const nameEle = this.querySelector( '.name' )
+                if ( !nameEle ) return
+                nameEle.innerHTML = this.name
             }
 
             render() {
                 console.log( 'render', this.name )
-                const template = document.querySelector( '#gender-name-template' )
+                const template = document.getElementById( 'gender-name-template' )
                 const nodes    = document.importNode( template.content, true )
                 this.appendChild( nodes )
 
@@ -137,9 +140,9 @@
             }, 3000 )
 
             setTimeout( () => {
-                const ele  = document.querySelector( 'gender-name' )
-                ele.name   = 'Betty Rubble'
-                ele.gender = 'female'
+                const ele = document.querySelector( 'gender-name' )
+                ele.setAttribute( 'name', 'Betty Rubble' )
+                ele.setAttribute( 'gender', 'female' )
             }, 6000 )
         } )
     </script>
