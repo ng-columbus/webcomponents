@@ -12,89 +12,19 @@
         // Has to be transpiled for IE11 due to lack of ES6 support
 
         class GenderName extends HTMLElement {
-
-            constructor() {
-                super()
-            }
-
-            static get observedAttributes() {
-                return [ 'gender', 'name' ]
-            }
-
-            get gender() {
-                return this.getAttribute( 'gender' )
-            }
-
-            set gender( value ) {
-                if ( value !== this.gender ) {
-                    this.setAttribute( 'gender', value )
-                }
-            }
-
-            get name() {
-                return this.getAttribute( 'name' ) || 'Unknown'
-            }
-
-            set name( value ) {
-                if ( value !== this.name ) {
-                    this.setAttribute( 'name', value )
-                }
-            }
-
-            attributeChangedCallback( name, oldValue, newValue ) {
-                console.log( 'attributeChangedCallback', name, oldValue, newValue )
-                this.render()
-            }
-
             connectedCallback() {
-                console.log( 'connected', this.name )
-                this.addEventListener( 'click', e => {
-                    alert( `In Component, target=${e.target.nodeName}` )
-                } )
-                this.render()
-            }
-
-            disconnectedCallback() {
-                console.log( 'disconnected', this.name )
-            }
-
-            render() {
-                console.log( 'render', this.name )
-                this.innerHTML = `<div><span class="gender"></span><h4>${this.name}</h4></div>`
+                this.innerHTML = `<h4>User Name</h4>`
             }
         }
 
         customElements.define( 'gender-name', GenderName )
-
-        window.addEventListener( 'DOMContentLoaded', function ( e ) {
-            let nameEle    = new GenderName()
-            nameEle.name   = 'Barney Rubble'
-            nameEle.gender = 'male'
-            document.body.appendChild( nameEle )
-
-            setTimeout( () => {
-                const nameEle = document.querySelectorAll( 'gender-name' )[ 0 ]
-                nameEle.setAttribute( 'name', 'Wilma Flintstone' )
-                nameEle.setAttribute( 'gender', 'female' )
-            }, 3000 )
-
-            setTimeout( () => {
-                document.querySelectorAll( 'gender-name' )[ 1 ]
-                        .remove()
-            }, 6000 )
-
-            document.querySelectorAll( 'gender-name' )[ 2 ]
-                    .addEventListener( 'click', e => {
-                        e.preventDefault()
-                        alert( `${e.currentTarget.nodeName} clicked; name="${e.currentTarget.name}"` )
-                    } )
-        } )
     </script>
 </head>
 <body>
-<h1>Embedded Elements</h1>
-<gender-name gender="male" name="Fred Flintstone"></gender-name>
-<gender-name gender="female" name="Betty Rubble"></gender-name>
-<h3>Programmatic Creation</h3>
+
+<h1>Custom Elements</h1>
+
+<gender-name></gender-name>
+
 </body>
 </html>
