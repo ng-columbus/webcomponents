@@ -74,7 +74,7 @@
                 console.log( 'init shadow dom' )
 
                 // create the shadow root
-                this.attachShadow( { mode: 'open' } )
+                this._shadowRoot = this.attachShadow( { mode: 'closed' } )
 
                 //  locate template nodes
                 const template = document.querySelector( '#gender-name-template' )
@@ -84,7 +84,7 @@
 
                 // import the nodes and append to the shadow root
                 const nodes = document.importNode( template.content, true )
-                this.shadowRoot.appendChild( nodes )
+                this._shadowRoot.appendChild( nodes )
 
                 // add a click listener to the entire component
                 this.addEventListener( 'click', e => {
@@ -150,7 +150,7 @@
             }
 
             updateGender() {
-                const genderEle = this.shadowRoot.querySelector( '.gender' )
+                const genderEle = this._shadowRoot.querySelector( '.gender' )
                 console.log( 'updating gender', genderEle, this._gender )
 
                 // Remove any children
@@ -172,7 +172,7 @@
             }
 
             updateName() {
-                this.shadowRoot.querySelector( '.name' ).innerHTML = this.name
+                this._shadowRoot.querySelector( '.name' ).innerHTML = this.name
             }
         }
 
