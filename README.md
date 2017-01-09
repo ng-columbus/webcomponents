@@ -31,5 +31,5 @@ shadow-dom-2 | Shadow dom support with "closed"
 
 git tag | description
 ------- | -----------
-
+html-imports | Code reworked to support html imports
 
